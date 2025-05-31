@@ -1,0 +1,130 @@
+openapi: 3.0.3
+
+info:
+  title: Clubee Backend API
+  description: API para as funcionalidades da Clubee, um Cartão de Fidelidade Virtual que funciona como um Clube de Vantagens. Destinado a pequenos empreendedores (MEI), permite a aplicação de programas de pontos para retenção, aquisição e aumento da visibilidade do negócio.
+  version: "1.0.0"
+
+servers:
+  - url: http://localhost:8080/v1
+
+tags:
+  - name: Customer Management
+    description: Endpoints para gerenciamento de clientes (usuários comuns e administradores)
+  - name: Company Management
+    description: Endpoints para gerenciamento de empresas
+
+paths:
+  /api/users/customers:
+    post:
+      summary: Registrar novo cliente
+      description: Endpoint público para cadastro de novos clientes
+      operationId: registerCustomer
+      tags:
+        - Customer Management
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCustomerRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateCustomerResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  requestBodies:
+    CreateCustomerRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CustomerRequestDto'
+
+  responses:
+    CreateCustomerResponse:
+      description: Cliente registrado com sucesso
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CustomerResponseDto'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    CustomerRequestDto:
+      type: object
+      description: DTO para cadastro de novo cliente
+      required:
+        - name
+        - email
+        - cpf
+        - password
+        - passwordConfirmation
+      properties:
+        name:
+          type: string
+          description: Nome do cliente
+          example: "Marinelton Custódio"
+        socialName:
+          type: string
+          description: Nome social do cliente
+          example: "Marinelton"
+        email:
+          type: string
+          description: E-mail válido do cliente
+          format: email
+          example: "custodio.marinelton@example.com"
+        cpf:
+          type: string
+          description: CPF válido
+          example: "12345678909"
+        password:
+          type: string
+          description: Senha segura (8-20 caracteres, 1 maiúscula, 1 número, 1 especial)
+          example: "Marinelton234#"
+          pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$"
+        passwordConfirmation:
+          type: string
+          description: Confirmação da senha do cliente
+          example: "Marinelton234#"
+          pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$"
+    CustomerResponseDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nome do cliente
+          example: "Marinelton Custódio"
+        socialName:
+          type: string
+          description: Nome social do cliente
+          example: "Marinelton"
+        email:
+          type: string
+          description: Email do cliente
+          example: "custodio.marinelton@example.com"
+        cpf:
+          type: string
+          description: CPF do cliente
+          example: "12345678909"
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: '000'
+        message:
+          type: string
+          description: Error message
+          example: 'An error occurred'
