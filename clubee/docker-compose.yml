@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  clubee-api:
+    container_name: clubee-api
+    build:
+      context: ../clubee
+    ports:
+      - 8080:8080
+    depends_on:
+      - clubee-database
+      - clubee-rabbitmq
+    environment:
+      DATABASE_URL: jdbc:postgresql://clubee-database:5432/clubee
+      DATABASE_USERNAME: user
+      DATABASE_PASSWORD: password
+    networks:
+      - clubee-network
+
+  clubee-database:
+    image: postgres:15-alpine
+    container_name: clubee-database
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: clubee
+    networks:
+      - clubee-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  clubee-rabbitmq:
+    image: rabbitmq:3.13.7-management-alpine
+    container_name: clubee-rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - clubee-network
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  clubee-network:
+    driver: bridge
