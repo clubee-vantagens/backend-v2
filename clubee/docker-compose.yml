@@ -10,6 +10,10 @@ services:
     depends_on:
       - clubee-database
       - clubee-rabbitmq
+    environment:
+      DATABASE_URL: jdbc:postgresql://clubee-database:5432/clubee
+      DATABASE_USERNAME: user
+      DATABASE_PASSWORD: password
     networks:
       - clubee-network
 
@@ -19,10 +23,9 @@ services:
     ports:
       - 5432:5432
     environment:
-      DATABASE_URL: jdbc:postgresql://localhost:5432/clubee
-      DATABASE_USERNAME: user
-      DATABASE_PASSWORD: password
-      DATABASE_DB: clubee
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: clubee
     networks:
       - clubee-network
     healthcheck:
