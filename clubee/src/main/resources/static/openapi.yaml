@@ -2,8 +2,11 @@ openapi: 3.0.3
 
 info:
   title: Clubee Backend API
-  description: API para as funcionalidades da Clubee, um Cartão de Fidelidade Virtual que funciona como um Clube de Vantagens. Destinado a pequenos empreendedores (MEI), permite a aplicação de programas de pontos para retenção, aquisição e aumento da visibilidade do negócio.
+  description: API do App Clubee
   version: "1.0.0"
+  contact:
+    name: Suporte
+    email: fidelidadeclubee@gmail.com
 
 servers:
   - url: http://localhost:8080/v1
@@ -33,6 +36,11 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   requestBodies:
     CreateCustomerRequest:
       required: true
@@ -128,3 +136,6 @@ components:
           type: string
           description: Error message
           example: 'An error occurred'
+
+security:
+  - BearerAuth: []
