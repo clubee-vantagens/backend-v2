@@ -140,5 +140,4 @@ public class CustomerModel {
     public void setUser(UserModel user) {
         this.user = user;
     }
-
 }
