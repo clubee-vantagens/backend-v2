@@ -5,8 +5,6 @@ import com.clubee.app.dto.response.CustomerResponseDto;
 import com.clubee.app.mapper.CustomerMapper;
 import com.clubee.app.repository.CustomerRepository;
 import com.clubee.domain.entity.Customer;
-import com.clubee.domain.entity.User;
-import com.clubee.domain.enums.Role;
 import com.clubee.infra.exception.general.UniqueValueInUseException;
 import com.clubee.infra.exception.general.UnmatchedPasswordException;
 import jakarta.transaction.Transactional;

@@ -2,20 +2,14 @@ package com.clubee.app.mapper;
 
 import com.clubee.app.dto.request.CustomerRequestDto;
 import com.clubee.app.dto.response.CustomerResponseDto;
-import com.clubee.domain.entity.Address;
-import com.clubee.domain.entity.Category;
 import com.clubee.domain.entity.Customer;
-import com.clubee.domain.entity.User;
 import com.clubee.infra.database.model.AddressModel;
-import com.clubee.infra.database.model.CategoryModel;
 import com.clubee.infra.database.model.CustomerModel;
-import com.clubee.infra.database.model.UserModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component

@@ -1,9 +1,6 @@
 package com.clubee.infra.repository;
 
 import com.clubee.app.repository.UserRepository;
-import com.clubee.domain.entity.User;
-import com.clubee.infra.database.model.UserJPARepository;
-import com.clubee.infra.database.model.UserModel;
 import com.clubee.infra.exception.general.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
 

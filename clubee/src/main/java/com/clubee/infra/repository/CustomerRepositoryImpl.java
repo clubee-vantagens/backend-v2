@@ -2,22 +2,13 @@ package com.clubee.infra.repository;
 
 import com.clubee.app.mapper.CustomerMapper;
 import com.clubee.app.repository.CustomerRepository;
-import com.clubee.domain.entity.Address;
-import com.clubee.domain.entity.Category;
 import com.clubee.domain.entity.Customer;
 import com.clubee.infra.database.CustomerJPARepository;
-import com.clubee.infra.database.model.AddressModel;
-import com.clubee.infra.database.model.CategoryModel;
-import com.clubee.infra.database.model.CustomerModel;
-import com.clubee.infra.database.model.UserModel;
-import com.clubee.infra.exception.general.EntityNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Repository
 public class CustomerRepositoryImpl implements CustomerRepository {

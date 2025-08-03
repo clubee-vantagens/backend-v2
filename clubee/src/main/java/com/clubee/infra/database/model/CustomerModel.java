@@ -1,144 +1,60 @@
 package com.clubee.infra.database.model;
 
+import com.clubee.domain.enums.Categories;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
 import java.util.UUID;
 
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity(name = "Customer")
 @Table(name = "customers")
 public class CustomerModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id", nullable = false, unique = true)
-    private Long id;
+    private UUID customerId;
 
-    private String name;
+    @Embedded
+    @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false))
+    private NameModel name;
 
-    @Column(name = "social_name", nullable = true)
-    private String socialName;
+    @Embedded
+    @AttributeOverride(name = "name", column = @Column(name = "social_name"))
+    private NameModel socialName;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
+    @Embedded
+    private EmailModel email;
 
-    @Column(name = "cpf", nullable = false, unique = true)
-    private String cpf;
+    @Embedded
+    private CPFModel cpf;
 
-    @Column(name = "phone_number", nullable = true, unique = true)
-    private String phoneNumber;
+    @Embedded
+    private PasswordModel password;
 
-    @Column(name = "date_of_birth")
-    private String dateOfBirth;
+    @Embedded
+    private PhoneModel phone;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = true)
+    @Embedded
+    private BirthDateModel birth_date;
+
+    @Embedded
     private AddressModel address;
 
-    @ManyToMany
-    @JoinTable(
-            name = "customer_preferences",
-            joinColumns = @JoinColumn(name = "customer_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
+    @ElementCollection(targetClass = Categories.class)
+    @CollectionTable(
+            name = "customer_categories",
+            joinColumns = @JoinColumn(name = "customer_id")
     )
-    private Set<CategoryModel> preferences;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserModel user;
-
-    public CustomerModel() {
-    }
-
-    public CustomerModel(String name, String socialName, String cpf, String email, String phoneNumber, String dateOfBirth, AddressModel address, Set<CategoryModel> preferences) {
-        this.name = name;
-        this.socialName = socialName;
-        this.email = email;
-        this.cpf = cpf;
-        this.phoneNumber = phoneNumber;
-        this.dateOfBirth = dateOfBirth;
-        this.address = address;
-        this.preferences = preferences;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSocialName() {
-        return socialName;
-    }
-
-    public void setSocialName(String socialName) {
-        this.socialName = socialName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public AddressModel getAddress() {
-        return address;
-    }
-
-    public void setAddress(AddressModel address) {
-        this.address = address;
-    }
-
-    public Set<CategoryModel> getPreferences() {
-        return preferences;
-    }
-
-    public void setPreferences(Set<CategoryModel> preferences) {
-        this.preferences = preferences;
-    }
-
-    public UserModel getUser() {
-        return user;
-    }
-
-    public void setUser(UserModel user) {
-        this.user = user;
-    }
-
+    @Column(name = "category")
+    @Enumerated(EnumType.STRING)
+    private Set<Categories> categories;
 }

@@ -1,7 +1,5 @@
 package com.clubee.app.dto.response;
 
-import com.clubee.domain.entity.Address;
-
 public record ViaCepResponseDto(
         String cep,
         String street,
