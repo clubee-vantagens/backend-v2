@@ -1,113 +1,123 @@
 package com.clubee.domain.entity;
 
 import com.clubee.domain.enums.Categories;
-import com.clubee.domain.enums.States;
 import com.clubee.domain.vo.*;
+import jakarta.persistence.*;
 
-import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@Entity(name = "Customer")
+@Table(name = "customers")
 public class Customer {
-  private final UUID customerId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(name = "customer_id", updatable = false, nullable = false, unique = true)
+  private UUID customerId;
+  @Embedded
+  @AttributeOverride(name = "value", column = @Column(name = "name", nullable = false))
   private Name name;
+  @Embedded
+  @AttributeOverride(name = "value", column = @Column(name = "social_name"))
   private Name socialName;
+  @Embedded
   private Email email;
+  @Embedded
   private CPF cpf;
+  @Embedded
   private Password password;
+  @Embedded
   private Phone phone;
+  @Embedded
   private BirthDate birthDate;
+  @Embedded
   private Address address;
-  private final Set<Categories> categories;
+  @ElementCollection(targetClass = Categories.class)
+  @CollectionTable(
+          name = "customer_categories",
+          joinColumns = @JoinColumn(name = "customer_id")
+  )
+  @Column(name = "category")
+  @Enumerated(EnumType.STRING)
+  private Set<Categories> categories;
 
-  public Customer(String name, String socialName, String email, String cpf, String password, String phone, LocalDate birthDate, String address, String state, String city, String cep) {
-    this.customerId = UUID.randomUUID();
-    this.name = new Name(name);
-    this.socialName = (socialName != null && !socialName.isBlank()) ? new Name(socialName) : null;
-    this.email = new Email(email);
-    this.cpf = new CPF(cpf);
-    this.password = Password.create(password);
-    this.phone = new Phone(phone);
-    this.birthDate = new BirthDate(birthDate);
-    this.address = new Address(address, city, cep, States.fromStatesName(state));
-    this.categories = new HashSet<>();
-  }
+  public Customer() {
 
-  public Customer(String customerId, String name, String socialName, String email, String cpf, String password, String phone, LocalDate birthDate, String address, String state, String city, String cep) {
-    this.customerId = UUID.fromString(customerId);
-    this.name = new Name(name);
-    this.socialName = (socialName != null && !socialName.isBlank()) ? new Name(socialName) : null;
-    this.email = new Email(email);
-    this.cpf = new CPF(cpf);
-    this.password = Password.restore(password);
-    this.phone = new Phone(phone);
-    this.birthDate = new BirthDate(birthDate);
-    this.address = new Address(address, city, cep, States.fromStatesName(state));
-    this.categories = new HashSet<>();
   }
 
   public UUID getCustomerId() {
     return customerId;
   }
 
-  public String getName() {
-    return this.name.getName();
+  public Name getName() {
+    return name;
   }
 
-  public void setName(String name) {
-    this.name = new Name(name);
+  public void setName(Name name) {
+    this.name = name;
   }
 
-  public String getSocialName() {
-    return this.socialName != null ? this.socialName.getName() : null;
+  public Name getSocialName() {
+    return socialName;
   }
 
-  public void setSocialName(String socialName) {
-    this.socialName = (socialName != null && !socialName.isBlank()) ? new Name(socialName) : null;
+  public void setSocialName(Name socialName) {
+    this.socialName = socialName;
   }
 
-  public String getEmail() {
-    return this.email.getEmail();
+  public Email getEmail() {
+    return email;
   }
 
-  public String getCPF() {
-    return this.cpf.getCPF();
+  public void setEmail(Email email) {
+    this.email = email;
   }
 
-  public boolean passwordMatches(String password) {
-    return this.password.passwordMatches(password);
+  public CPF getCpf() {
+    return cpf;
   }
 
-  public void changePassword(String newPassword) {
-    this.password = Password.create(newPassword);
+  public void setCpf(CPF cpf) {
+    this.cpf = cpf;
   }
 
-  public String getPhone() {
-    return this.phone.getPhone();
+  public Password getPassword() {
+    return password;
   }
 
-  public LocalDate getBirthDate() {
-    return this.birthDate.getBirthDate();
+  public void setPassword(Password password) {
+    this.password = password;
   }
 
-  public String getAddress() {
-    return this.address.getAddress();
+  public Phone getPhone() {
+    return phone;
   }
 
-  public String getCity() {
-    return this.address.getCity();
+  public void setPhone(Phone phone) {
+    this.phone = phone;
   }
 
-  public String getCEP() {
-    return this.address.getCEP();
+  public BirthDate getBirthDate() {
+    return birthDate;
   }
 
-  public String getState() {
-    return this.address.getState();
+  public void setBirthDate(BirthDate birthDate) {
+    this.birthDate = birthDate;
   }
 
-  public void addCategory(Categories category) {
-    this.categories.add(category);
+  public Address getAddress() {
+    return address;
+  }
+
+  public void setAddress(Address address) {
+    this.address = address;
+  }
+
+  public Set<Categories> getCategories() {
+    return categories;
+  }
+
+  public void setCategories(Set<Categories> categories) {
+    this.categories = categories;
   }
 }

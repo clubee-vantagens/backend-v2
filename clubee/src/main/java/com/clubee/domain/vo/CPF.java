@@ -1,20 +1,29 @@
 package com.clubee.domain.vo;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class CPF {
-  private final String value;
+  @Column(name = "cpf", nullable = false, unique = true, length = 11)
+  private String value;
   private static final int FACTOR_FIRST_DIGIT = 10;
   private static final int FACTOR_SECOND_DIGIT = 11;
 
-  public CPF(String cpf) {
+  public CPF() {
+
+  }
+
+  public String getCPF() {
+    return value;
+  }
+
+  public void setCPF(String cpf) {
     String cleanedCpf = removeNonDigits(cpf);
     if (!isValid(cleanedCpf)) {
       throw new IllegalArgumentException("Invalid CPF");
     }
     this.value = cleanedCpf;
-  }
-
-  public String getCPF() {
-    return value;
   }
 
   private boolean isValid(String cpf) {
