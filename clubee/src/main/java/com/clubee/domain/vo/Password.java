@@ -20,7 +20,7 @@ public class Password {
   }
 
   public void setPassword(String password) {
-    if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$")) {
+    if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d])[^\\s]{8,20}$")) {
       throw new IllegalArgumentException("Invalid password format. Password must be 8-20 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character (e.g., @$!%*?&).");
     }
 //    this.value = encoder.encode(password);
