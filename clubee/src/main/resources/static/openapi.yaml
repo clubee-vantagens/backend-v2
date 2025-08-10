@@ -1,0 +1,148 @@
+openapi: 3.0.3
+
+info:
+  title: Clubee Backend API
+  description: API do App Clubee
+  version: "1.0.0"
+  contact:
+    name: Suporte
+    email: fidelidadeclubee@gmail.com
+
+servers:
+  - url: http://localhost:8080/v1
+    description: desenvolvimento
+
+tags:
+  - name: Customer Management
+    description: Endpoints para gerenciamento de clientes (usuários comuns e administradores)
+  - name: Company Management
+    description: Endpoints para gerenciamento de empresas
+
+paths:
+  /api/customers:
+    post:
+      summary: Registrar novo cliente
+      description: Endpoint público para cadastro de novos clientes
+      operationId: registerCustomer
+      tags:
+        - Customer Management
+      security: []
+      requestBody:
+        $ref: '#/components/requestBodies/CustomerRegister.Request'
+      responses:
+        '201':
+          description: Cliente registrado com sucesso
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/categories:
+    get:
+      summary: Listar categorias disponíveis
+      description: Retorna todas as categorias cadastradas no sistema
+      operationId: listCategories
+      tags:
+        - Customer Management
+      responses:
+        '200':
+          description: Lista de categorias retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCategories.Response'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  requestBodies:
+    CustomerRegister.Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CustomerRegister.Request'
+
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    CustomerRegister.Request:
+      type: object
+      description: DTO para cadastro de novo cliente
+      required:
+        - name
+        - email
+        - cpf
+        - password
+        - passwordConfirmation
+      properties:
+        name:
+          type: string
+          description: Nome do cliente
+          example: "Marinelton Custodio"
+        socialName:
+          type: string
+          description: Nome social do cliente
+          example: "Marinelton"
+        email:
+          type: string
+          description: E-mail válido do cliente
+          format: email
+          example: "custodio.marinelton@example.com"
+        cpf:
+          type: string
+          description: CPF válido
+          example: "12345678909"
+        password:
+          type: string
+          description: Senha segura (8-20 caracteres, 1 maiúscula, 1 número, 1 especial)
+          example: "Marinelton234#"
+          pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&#]{8,20}$"
+        passwordConfirmation:
+          type: string
+          description: Confirmação da senha do cliente
+          example: "Marinelton234#"
+          pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&#]{8,20}$"
+
+    ListCategories.Response:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            type: string
+          description: Lista de categorias
+          example: ["Restaurante", "Padaria", "Supermercado"]
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: '000'
+        message:
+          type: string
+          description: Error message
+          example: 'An error occurred'
+
+security:
+  - BearerAuth: []
