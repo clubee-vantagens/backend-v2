@@ -16,7 +16,7 @@ public class Name {
   }
 
   public void setName(String name) {
-    if (!name.matches("^(?=.{3,}$)[A-Za-zÀ-ÖØ-öø-ÿ]+(?: [A-Za-zÀ-ÖØ-öø-ÿ]+)+$")) {
+    if (!name.matches("^(?=.{3,}$)[A-Za-zÀ-ÖØ-öø-ÿ]+(?: [A-Za-zÀ-ÖØ-öø-ÿ]+)*$")) {
       throw new IllegalArgumentException("Invalid name");
     }
     this.value = name;
