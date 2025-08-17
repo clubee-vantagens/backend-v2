@@ -54,6 +54,41 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /api/customers/categories:
+    post:
+      summary: Atribuir categorias a um cliente
+      description: >
+        Permite atribuir categorias a um cliente existente.
+        - Caso o array `categories` esteja vazio ou `null`, o sistema atribui **todas** as categorias disponíveis.
+        - Caso o array contenha menos de 3 categorias, retorna erro.
+        - Caso o array contenha 3 ou mais categorias, atribui exatamente essas.
+      operationId: assignCustomerCategories
+      tags:
+        - Customer Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerAssignCategories.Request'
+      responses:
+        '200':
+          description: Categorias atribuídas com sucesso
+        '400':
+          description: Bad request - por exemplo, menos de 3 categorias enviadas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Cliente não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
 components:
   securitySchemes:
     BearerAuth:
@@ -131,6 +166,36 @@ components:
             type: string
           description: Lista de categorias
           example: ["Restaurante", "Padaria", "Supermercado"]
+
+    CustomerAssignCategories.Request:
+      type: object
+      description: DTO para atribuir categorias a um cliente
+      required:
+        - customerId
+      properties:
+        customerId:
+          type: string
+          format: uuid
+          description: ID do cliente
+          example: "b8fb4bab-c72f-4911-8a7d-625b21a1a098"
+        categories:
+          type: array
+          items:
+            type: string
+            enum:
+              - ALIMENTACAO
+              - PETSHOP
+              - PRODUTOS_ARTESANAIS
+              - PAPELARIA
+              - FLORES_E_PLANTAS
+              - BELEZA_E_ESTETICA
+              - MANUTENCAO_AUTOMOVEIS
+              - LIMPEZA_AUTOMOVEIS
+              - LIVRARIA
+              - PERFUMARIA
+              - VESTUARIO_CALCADOS
+              - INFORMATICA_ELETRONICOS
+          description: Lista de categorias a serem atribuídas. Se vazia ou nula, atribui todas.
 
     Error:
       type: object
