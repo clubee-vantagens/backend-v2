@@ -1,5 +1,7 @@
 package com.clubee.domain.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.util.Arrays;
 
 public enum Categories {
@@ -26,11 +28,13 @@ public enum Categories {
     return category;
   }
 
-  public static Categories fromDisplay(String category) {
-    String normalized = category.trim().toLowerCase();
-    return Arrays.stream(values())
-            .filter(type -> type.category.toLowerCase().equals(normalized))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Invalid category: " + category));
+  @JsonCreator
+  public static Categories fromValue(String value) {
+    for (Categories c : Categories.values()) {
+      if (c.category.equalsIgnoreCase(value)) {
+        return c;
+      }
+    }
+    throw new IllegalArgumentException("Invalid category: " + value);
   }
 }
